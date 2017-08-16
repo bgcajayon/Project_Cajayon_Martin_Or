@@ -1,0 +1,56 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package gui;
+
+import acm.program.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
+import acm.util.*;
+import acm.graphics.*;
+
+/**
+ *
+ * @author Bryon
+ */
+public class GUI extends Program implements GUIconstants{
+
+    /**
+     * @param args the command line arguments
+     */
+    private JLabel label;
+   private JTextField Msg;
+   private JButton Send;
+   private GCanvas canvas;
+  
+
+      public void init() {
+
+        canvas = new GCanvas();
+	add(canvas);
+                
+       label = new JLabel("Name");
+       add(label, SOUTH);
+
+       Msg = new JTextField(20);
+       add(Msg, SOUTH);
+       Msg.addActionListener(this);
+
+       Send = new JButton("Send");
+       add(Send, SOUTH);
+     
+      
+   }
+         public static void main(String[] args) {
+        new GUI().start(args);
+    }
+
+  
+    
+  
+    
+}
