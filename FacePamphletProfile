@@ -1,0 +1,89 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dp.cajayon.martin.or.facepamphlet5;
+/**
+ *
+ * @author 
+ */
+import acm.graphics.*;
+import java.util.*;
+
+public class FacePamphletProfile implements FacePamphletConstants {
+	
+	private String Name = "";
+        private final String Password = "";
+	private GImage Image = null;
+	private String Status = "No current status";
+	private final ArrayList <String> friends = new ArrayList<String>();
+	
+	public FacePamphletProfile(String name) {
+		Name = name;
+	}
+        
+        public String getPass(){
+            return Password;
+        }
+        
+	public String getName() {
+		return Name;
+	}
+
+	public GImage getImage() {
+		if(Image == null) {
+			return null;
+		}
+		else{
+			return Image;
+		}
+	}
+
+	public void setImage(GImage image) {
+		Image = image;
+	}
+	
+	public String getStatus() {
+		return Status;
+	}
+        
+	public void setStatus(String status) {
+		Status = status;
+	}
+
+	public boolean addFriend(String friend) {
+		if(friends.contains(friend)) {
+			return false;
+		}
+		else{
+			friends.add(friend);
+			return true;
+		}
+	}
+
+	public boolean removeFriend(String friend) {
+		if(friends.contains(friend)) {
+			friends.remove(friends.indexOf(friend));
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	public Iterator<String> getFriends() {
+		return friends.iterator();
+	}
+	
+	public String toString() {
+		String profile = Name + " (" + Status + "): ";
+		Iterator<String>it = friends.iterator();
+		while(it.hasNext()) {
+			profile += it.next() + ", ";
+		}
+		return profile;
+	}
+	
+}
+
