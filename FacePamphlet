@@ -1,0 +1,360 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dp.cajayon.martin.or.facepamphlet5;
+
+/**
+ *
+ * @author irene
+ */
+import acm.program.*;
+import acm.graphics.*;
+import acm.util.*;
+import dp.cajayon.martin.or.BreakOut.BreakOut;
+import dp.cajayon.martin.or.GUI.GUI;
+import dp.cajayon.martin.or.HANGMAN.HANGMAN;
+import dp.cajayon.martin.or.NameSurfer.NameSurfer;
+import dp.cajayon.martin.or.calc_or.Calc_Or;
+import dp.cajayon.martin.or.facepamphlet5.FacePamphletProfile;
+import dp.cajayon.martin.or.facepamphlet5.LOG;
+import dp.cajayon.martin.or.yahtzee_.Yahtzee_;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class FacePamphlet extends Program implements FacePamphletConstants {
+
+        private myGraph Graph;
+        int i = 0;
+        private JTextField name;
+	private JTextField status;
+	private JTextField picture;
+	private JTextField friend;
+        private String[][] accounts = {{"", ""},{"", ""}};
+        private JFrame login;
+        
+        private JButton bArtistry;
+        private JButton bBreakOut;
+        private JButton bHangMan;
+        private JButton bCalculator;
+        private JButton bYahtzee;
+        private JButton bNameSurfer;
+        private JButton bChat;
+	private FacePamphletDataBase profileInfo = new FacePamphletDataBase();
+	private FacePamphletCanvas canvas = new FacePamphletCanvas();
+	
+	private FacePamphletProfile currentProfile = null;
+	private JFrame dun;
+        
+	public void init() {
+	
+            
+           // JFrame dun = new JFrame();
+              //  dun.setSize(420, 620);
+                
+		add(new JLabel("Name "), NORTH); 
+		
+		name = new JTextField(TEXT_FIELD_SIZE);
+		add(name, NORTH);
+		
+		add(new JButton("Add"), SOUTH);
+		
+		add(new JButton("Delete"), SOUTH);
+		
+		add(new JButton("LookUp"), SOUTH);
+        
+        bBreakOut = new JButton("Breakout");
+        add(bBreakOut, EAST);
+        
+        bHangMan = new JButton("Hangman");
+        add(bHangMan, EAST);
+        
+        bCalculator = new JButton("Calculator");
+        add(bCalculator,EAST);
+        
+        bNameSurfer = new JButton("NameSurfer");
+        add(bNameSurfer, EAST);
+        
+        bYahtzee = new JButton("Yahtzee!");
+        add(bYahtzee, EAST);
+		
+        bChat =new JButton("Chat");
+        add(bChat, NORTH);
+        
+		status = new JTextField(TEXT_FIELD_SIZE);
+		add(status, WEST);
+		
+		add(new JButton("Change Status"), WEST);
+		
+		add(new JLabel(EMPTY_LABEL_TEXT), WEST); 
+		
+		picture = new JTextField(TEXT_FIELD_SIZE);
+		add(picture, WEST);
+		
+		add(new JButton("Change Picture"), WEST);
+		
+		add(new JLabel(EMPTY_LABEL_TEXT), WEST); 
+		
+		friend = new JTextField(TEXT_FIELD_SIZE);
+		add(friend, WEST);
+		
+		add(new JButton("Add Friend"), WEST);
+		
+		addActionListeners();
+		status.addActionListener(this);
+		picture.addActionListener(this);
+		friend.addActionListener(this);
+		
+		add(canvas);
+                Graph = new myGraph(5);
+    }
+  
+    public void actionPerformed(ActionEvent e) {
+    	
+    	String enteredName = name.getText();
+    	/*if(e.getActionCommand().equals("Add")){
+            println("Add: "+ name.getText());
+        }
+        else if(e.getActionCommand().equals("Delete")){
+            println("Delete: "+ name.getText());
+        }
+        else if(e.getActionCommand().equals("LookUp")){
+            println("LookUp: "+ name.getText());
+        }
+        else if(e.getActionCommand().equals("Change Status") || e.getSource()== status.getText()){
+            println("Change Status: "+ status.getText());
+        }
+        else if(e.getActionCommand().equals("Change Picture") || e.getSource()== picture.getText()){
+            println("Change Picture: "+ picture.getText());
+        }
+        else if(e.getActionCommand().equals("Add Friend") || e.getSource()== friend.getText()){
+            println("Add Friend: "+ friend.getText());
+        } */
+    	if(e.getActionCommand().equals("Add") && !name.getText().equals("")) {
+    		if(profileInfo.containsProfile(enteredName) == false) {
+    			FacePamphletProfile profile = new FacePamphletProfile(enteredName);
+    			profileInfo.addProfile(profile);
+    			canvas.displayProfile(profile);
+    			canvas.showMessage("New profile created");
+    			currentProfile = profile;
+                    }
+    		else{
+    			FacePamphletProfile profile = profileInfo.getProfile(enteredName);
+    			canvas.displayProfile(profile);
+    			canvas.showMessage("A profile with name " + enteredName + " already exists.");
+    			currentProfile = profile;
+    		}
+                //displayProfile();
+        }
+    	else if (e.getActionCommand().equals("Delete") && !name.getText().equals("")){
+    		canvas.removeAll();
+    		currentProfile = null;
+    		if(profileInfo.containsProfile(enteredName) == true) {
+    			profileInfo.deleteProfile(enteredName);
+    			canvas.showMessage("Profile of " + enteredName + " deleted");
+    		}
+    		else{
+    			canvas.showMessage("A profile with name " + enteredName + " does not exist.");
+    		}
+                //displayProfile();
+    	}
+    	
+    	else if (e.getActionCommand().equals("LookUp") && !name.getText().equals("")){
+    		canvas.removeAll(); 
+    		if(profileInfo.containsProfile(enteredName) == true) {
+    			FacePamphletProfile profile = profileInfo.getProfile(enteredName);
+                        currentProfile = profile;
+    			canvas.displayProfile(profile);
+    			canvas.showMessage("Displaying " + enteredName);
+                       
+    		}
+    		else{
+    			currentProfile = null;
+                        canvas.showMessage("A profile with name " + enteredName + " does not exist.");
+    		}
+                //displayProfile();
+    	}
+    	else if (e.getActionCommand().equals("Change Status") || e.getSource() == status && !status.getText().equals("")){
+    		String statusMessage = status.getText();
+    		if(currentProfile != null) {
+    			FacePamphletProfile profile = profileInfo.getProfile(currentProfile.getName());
+    			profile.setStatus(profile.getName() + " is " + statusMessage);
+    			canvas.displayProfile(profile);
+    			canvas.showMessage("Status updated to " + statusMessage);
+    		}
+    		else{
+    			canvas.showMessage("Please select a profile to change status");
+    		}
+    	}
+    	else if (e.getActionCommand().equals("Change Picture") || e.getSource() == picture && !picture.getText().equals("")){
+    		String filename = picture.getText();
+    		GImage image = null;
+                if(currentProfile!=null){
+                    FacePamphletProfile profile = profileInfo.getProfile(currentProfile.getName());
+                    try{
+                        image = new GImage(filename);
+                        profile.setImage(image);
+                    }catch (ErrorException ex)
+                    { 
+                        image = null;
+                    }canvas.displayProfile(profile);
+                        
+                    }if(currentProfile.getImage()==null){
+                            canvas.showMessage("Picture could not be updated");
+                        } else{
+                        canvas.showMessage("Picture updated");
+                    }
+                }
+                /*if(currentProfile != null) {
+    			FacePamphletProfile profile = profileInfo.getProfile(currentProfile.getName());
+    			GImage image = null;
+    			try {
+    				image = new GImage(filename);
+    				profile.setImage(image);
+    			} catch (ErrorException ex) {
+    				image = null;
+    			}
+    			canvas.displayProfile(profile);
+    			if(image == null) {
+    				canvas.showMessage("Unable to open image file: " + filename);
+    			}
+    			else{
+    				canvas.showMessage("Picture updated");
+    			}
+    		}
+    		else{
+    			println("Please select a profile to change picture");
+    		}*/
+                //displayProfile();
+    	else if (e.getActionCommand().equals("Add Friend") || e.getSource() == friend && !friend.getText().equals("")){
+    		String friendName = friend.getText();
+    		if(currentProfile != null) {
+    			FacePamphletProfile profile = profileInfo.getProfile(currentProfile.getName());
+    			if(profile.getName().equals(friendName)) {
+    				canvas.showMessage("You cannot friend yourself");
+    			}
+    			else if(profileInfo.containsProfile(friendName)) {
+    				FacePamphletProfile friendProfile = profileInfo.getProfile(friendName);
+    				if(profile.addFriend(friendName) == true) {
+    					profile.addFriend(friendName);
+    					friendProfile.addFriend(enteredName);
+    					canvas.displayProfile(profile);
+    					canvas.showMessage(friendName + " added as a friend.");
+    				}
+    				else {
+    					canvas.showMessage(profile.getName() + " already has " + friendName + " as a friend.");
+    				}
+    			}
+    			else{
+    				canvas.showMessage(friendName + " does not exist.");
+    			}
+    		}
+    		else{
+    			canvas.showMessage("Please select a profile to add friend");
+    		}	
+                //displayProfile();
+    	}
+        else if (e.getActionCommand().equals("Breakout")) {
+            functionBreakOut(); 
+        }
+        else if (e.getActionCommand().equals("Calculator")){
+            functionCalc();
+        }
+        else if (e.getActionCommand().equals("NameSurfer")) {
+            functionNameSurfer(); 
+        }
+        else if (e.getActionCommand().equals("Yahtzee!")){
+            functionYahtzee();
+         }
+        else if (e.getActionCommand().equals("Hangman")) {
+            functionHangMan(); 
+        }
+        else if(e.getActionCommand().equals("Chat")){
+            functionChatbox();
+        }
+    }
+    /*private void displayProfile(){
+    if(currentProfile!=null){
+        println("----> Current Profile: "+currentProfile.toString());
+    }
+    else{
+        println("----> No Current Profile");
+    }
+    }*/
+     private void functionBreakOut(){
+    JFrame breakoutWindow =new JFrame("Breakout Game");
+    BreakOut bo = new BreakOut();
+    breakoutWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    breakoutWindow.setSize(420, 620);
+    breakoutWindow.setVisible(true);
+    breakoutWindow.add(bo);
+    bo.addMouseListeners();
+    bo.start();
+    }
+    
+    private void functionLogin(){
+    login.setSize(290, 350);
+    LOG log = new LOG();
+    log.init();
+    }
+    
+    private void functionCalc(){
+    JFrame CalcWindow =new JFrame("Calculator");
+    Calc_Or Cal = new Calc_Or();
+    CalcWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    CalcWindow.setSize(190,300);
+    CalcWindow.setVisible(true);
+    CalcWindow.add(Cal);
+    Cal.addMouseListeners();
+    Cal.start();
+    }
+    private void functionNameSurfer(){
+    JFrame NameSurferWindow =new JFrame("Name Surfer Graph");
+    NameSurfer NS = new NameSurfer();
+    NS.start();
+    }   
+    private void functionYahtzee(){
+    JFrame YWindow =new JFrame("Yahtzee!");
+    Yahtzee_ Y = new Yahtzee_();
+    YWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    YWindow.setSize(725,500);
+    YWindow.setVisible(true);
+    YWindow.add(Y);
+    Y.addMouseListeners();
+    Y.start();
+    }
+    private void functionHangMan(){
+    JFrame HangManWindow =new JFrame("Hangman Game");
+    HANGMAN HM = new HANGMAN();
+    HangManWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    HangManWindow.setSize(200,600);
+    HangManWindow.setVisible(true);
+    HangManWindow.add(HM);
+    //HM.addMouseListeners();
+    //HM.start();
+    HM.init();
+    }
+    private void functionChatbox(){
+    JFrame ChatWindow =new JFrame("CHAT");
+    GUI Chat = new GUI();
+    //ChatWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    //ChatWindow.setSize(350,400);
+    //ChatWindow.setVisible(true);
+    //ChatWindow.add(Chat);
+    //HM.addMouseListeners();
+    Chat.start();
+    }
+    
+    public static void main(String[] args){    
+        
+       
+    //login.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    //login.setSize(290, 350);
+    
+           new FacePamphlet().start();
+        }
+}
+
+    
+
