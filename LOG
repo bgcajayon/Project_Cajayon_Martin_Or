@@ -1,0 +1,196 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dp.cajayon.martin.or.facepamphlet5;
+
+/**
+ *
+ * @author user
+ */
+
+import acm.program.*;
+import static acm.program.Program.EAST;
+
+import static acm.program.Program.WEST;
+import dp.cajayon.martin.or.BreakOut.MyList;
+
+import static dp.cajayon.martin.or.facepamphlet5.FacePamphletConstants.TEXT_FIELD_SIZE;
+
+import java.awt.event.ActionEvent;
+
+import java.io.IOException;
+
+import javax.swing.*;
+
+import java.util.*;
+import java.io.*;
+import java.lang.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class LOG extends Program {
+    private Queue<String> q = new LinkedList<>();
+    private MyList<String> account = new MyList<String>();
+    private JTextField UserField;
+    private JTextField PWField;
+    private JTextField UserNew;
+    private JTextField PWNew;
+    private LOG log;
+    public String[][] accounts = new String [100][100];
+    public int i=0;
+    
+    private Formatter userpass1;
+    private Scanner userpass2;
+    
+    String deets = "temp";
+    String userpass = "userpass";
+    
+    public void CreateUserPass(){
+        try{
+            userpass1 = new Formatter("userpass.txt");
+        }catch(Exception e){
+            System.out.println("ded");
+        }
+    }    
+    
+    //dets is user,pass
+    public void EditFile(String dets){
+        q.add(dets);
+        // pls place array insertion here too
+        int qsize=q.size();
+        for(int i=0;i<qsize;i++){
+            String chat = q.remove();
+            q.add(chat);
+            userpass.format("%s",dets +"\n");
+        }
+    }
+    
+    public void CloseUserPass(){
+        userpass1.close();
+    }
+    
+    public void ReadFile(){
+        try{
+            userpass2 = new Scanner(new File("userpass.txt"));
+        }
+        catch(Exception e){
+            System.out.println("No file");
+        }
+    }
+    
+    public String StoreFile(){
+        while(userpass2.hasNext()){
+            deets = userpass2.nextLine();
+            q.add(deets);
+            // add array insertion here
+        }
+        return null;
+    }
+    
+    public void CloseFile(){
+        userpass2.close();
+    }
+     
+    
+    public void init(){
+        
+        try {
+            GUILOG();
+        } catch (IOException ex) {
+            Logger.getLogger(LOG.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }  
+    public void GUILOG() throws IOException {
+        
+        add(new JLabel ("Username:"),WEST);
+        UserField = new JTextField(TEXT_FIELD_SIZE);
+        add(UserField,WEST);
+        UserField.addActionListener(this);
+        
+        add(new JLabel ("Password:"),WEST);
+        PWField = new JTextField(TEXT_FIELD_SIZE);
+        add(PWField,WEST);
+        PWField.addActionListener(this);
+        
+        add(new JLabel ("New Username:"),WEST);
+        UserNew = new JTextField(TEXT_FIELD_SIZE);
+        add(UserNew,WEST);
+        UserNew.addActionListener(this);
+        
+        add(new JLabel ("New Password:"),WEST);
+        PWNew = new JTextField(TEXT_FIELD_SIZE);
+        add(PWNew,WEST);
+        PWNew.addActionListener(this);
+                
+        add(new JButton ("Sign In"),EAST);
+        
+        add(new JButton ("Sign Up"),EAST);
+        add(new JButton ("Cancel"),EAST);
+        addActionListeners();
+        
+    }
+    public void actionPerformed(ActionEvent e) {
+        if(e.getActionCommand().equals("Sign In")){
+            signin();
+        }else if(e.getActionCommand().equals("Sign Up")){
+            signup();
+        }
+    }
+    public  void signin(){
+        String userpass = UserField.getText()+","+PWField.getText();
+        
+            System.out.println(userpass);
+            System.out.println(userpass.equals("admin,admin12"));        
+                
+         if(userpass.equals("admin,admin12")){
+             UserField.setText("");
+             PWField.setText("");
+             
+             FacePamphlet app = new FacePamphlet();
+             
+             app.start();
+             
+             //welcom w = new welcom();
+             //w.setVisible(true);
+        } else{
+            JOptionPane.showMessageDialog(null,"This password is Extremely Wrong\n Click OK and Try Again.2","Wrong Pass",JOptionPane.ERROR_MESSAGE);
+            PWField.setText("");
+            UserField.setText("");
+        }
+    }
+    public void signup(){
+        account.createList();
+
+        String name2 = UserField.getText();
+        String pass2 = PWField.getText();
+        String name1 = UserNew.getText();
+        String pass1 = PWNew.getText();
+        
+        
+       
+    }    
+    public static void main(String[] args) {
+       new LOG().start(args); 
+       /*
+       Scanner input = new Scanner(System.in);
+        String username;
+        String pass;
+        System.out.println("Log in:");
+        System.out.println("Indtast username:");
+        username = input.nextLine();
+
+        System.out.println("Indtast password: ");
+        pass = input.nextLine();
+
+        users check = new users(username, pass);
+
+    if(check.auth()) 
+        System.out.println("You are logged in");
+ */
+    }
+}
+    
+
