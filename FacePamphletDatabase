@@ -1,0 +1,67 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dp.cajayon.martin.or.facepamphlet5;
+
+/**
+ *
+ * @author irene
+ */
+import java.util.*;
+
+public class FacePamphletDataBase implements FacePamphletConstants {
+	
+	private Map<String, FacePamphletProfile> profiles;
+       // private Map<String, FacePamphletProfile> password;
+	
+	public FacePamphletDataBase() {
+		profiles = new HashMap<String, FacePamphletProfile>();
+               // passwords = new HashMap<String, FacePamphletProfile>();
+	}
+	
+	
+	public void addProfile(FacePamphletProfile profile) {
+		if(!profiles.containsKey(profile.getName())) {
+			profiles.put(profile.getName(), profile);
+		}
+		else{
+			profiles.remove(profile.getName());
+			profiles.put(profile.getName(), profile);
+		}
+	}
+
+	public FacePamphletProfile getProfile(String name) {
+		if(profiles.containsKey(name)) {
+			return profiles.get(name);
+		}
+		else{
+			return null;
+		}
+		
+	}
+	
+	public void deleteProfile(String name) {
+		if(profiles.containsKey(name)) {
+			FacePamphletProfile profileToRemove = profiles.get(name);
+			Iterator<String>it = profileToRemove.getFriends();
+			while(it.hasNext()) {
+				String friendName = it.next();
+				FacePamphletProfile friendsProfile = profiles.get(friendName);
+				friendsProfile.removeFriend(name);
+			}
+			profiles.remove(name);
+		}
+	}
+
+	public boolean containsProfile(String name) {
+		if(profiles.containsKey(name)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+}
